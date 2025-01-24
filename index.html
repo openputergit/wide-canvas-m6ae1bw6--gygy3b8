@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropSphere | Indian Real Estate Platform</title>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .neubrutalism {
+            border: 3px solid black;
+            box-shadow: 5px 5px 0px black;
+        }
+        .property-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px black;
+            transition: all 0.2s ease;
+        }
+        #map {
+            height: 400px;
+        }
+    </style>
+</head>
+<body class="bg-[#FFEBCD]">
+    <!-- Navigation -->
+    <nav class="p-4 bg-[#FF6B6B] neubrutalism mb-8">
+        <div class="container mx-auto flex flex-wrap justify-between items-center">
+            <h1 class="text-3xl font-bold">PropSphere</h1>
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <a href="#" class="bg-white p-2 neubrutalism hover:bg-yellow-200">Buy</a>
+                <a href="#" class="bg-white p-2 neubrutalism hover:bg-yellow-200">Rent</a>
+                <a href="#" class="bg-white p-2 neubrutalism hover:bg-yellow-200">Commercial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-white p-6 neubrutalism">
+            <div class="flex flex-wrap gap-4">
+                <input type="text" placeholder="Location" class="p-2 border-2 border-black flex-1">
+                <select class="p-2 border-2 border-black">
+                    <option>Property Type</option>
+                    <option>Apartment</option>
+                    <option>Villa</option>
+                    <option>Plot</option>
+                </select>
+                <input type="number" placeholder="Budget" class="p-2 border-2 border-black">
+                <button class="bg-[#4ECDC4] p-2 neubrutalism hover:bg-[#45B7AF]">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Properties -->
+    <div class="container mx-auto px-4 mb-8">
+        <h2 class="text-2xl font-bold mb-4">Featured Properties</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Property Cards -->
+            <div class="bg-white p-4 neubrutalism property-card">
+                <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914" alt="Property" class="w-full h-48 object-cover mb-4 neubrutalism">
+                <h3 class="text-xl font-bold">Luxury Apartment</h3>
+                <p class="text-gray-600">Whitefield, Bangalore</p>
+                <p class="text-xl font-bold mt-2">₹1.5 Cr</p>
+                <div class="flex justify-between mt-2">
+                    <span>3 BHK</span>
+                    <span>1500 sq.ft</span>
+                </div>
+            </div>
+            <!-- More property cards... -->
+        </div>
+    </div>
+
+    <!-- Inquiry Form -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-white p-6 neubrutalism">
+            <h2 class="text-2xl font-bold mb-4">Submit Property Inquiry</h2>
+            <form id="inquiryForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Name" required class="p-2 border-2 border-black">
+                    <input type="email" placeholder="Email" required class="p-2 border-2 border-black">
+                    <input type="tel" placeholder="Phone" required class="p-2 border-2 border-black">
+                    <input type="number" placeholder="Budget" required class="p-2 border-2 border-black">
+                    <select class="p-2 border-2 border-black">
+                        <option>Select Property Type</option>
+                        <option>Apartment</option>
+                        <option>Villa</option>
+                        <option>Plot</option>
+                    </select>
+                    <select class="p-2 border-2 border-black flat-type hidden">
+                        <option>Select Flat Type</option>
+                        <option>1 BHK</option>
+                        <option>2 BHK</option>
+                        <option>3 BHK</option>
+                    </select>
+                    <input type="text" placeholder="Location" required class="p-2 border-2 border-black">
+                    <input type="text" placeholder="Preferred Amenities" class="p-2 border-2 border-black">
+                </div>
+                <button type="submit" class="w-full bg-[#FF6B6B] p-3 neubrutalism hover:bg-[#FF5252]">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-white p-4 neubrutalism">
+            <div id="map" class="neubrutalism"></div>
+        </div>
+    </div>
+
+    <!-- EMI Calculator -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-white p-6 neubrutalism">
+            <h2 class="text-2xl font-bold mb-4">EMI Calculator</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="number" id="loanAmount" placeholder="Loan Amount" class="p-2 border-2 border-black">
+                <input type="number" id="interestRate" placeholder="Interest Rate %" class="p-2 border-2 border-black">
+                <input type="number" id="loanTerm" placeholder="Loan Term (years)" class="p-2 border-2 border-black">
+            </div>
+            <button onclick="calculateEMI()" class="mt-4 bg-[#4ECDC4] p-2 neubrutalism hover:bg-[#45B7AF]">Calculate EMI</button>
+            <div id="emiResult" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([12.9716, 77.5946], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        // EMI Calculator
+        function calculateEMI() {
+            const P = document.getElementById('loanAmount').value;
+            const r = (document.getElementById('interestRate').value / 12) / 100;
+            const n = document.getElementById('loanTerm').value * 12;
+            
+            const emi = P * r * (Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            document.getElementById('emiResult').innerHTML = `Monthly EMI: ₹${Math.round(emi).toLocaleString('en-IN')}`;
+        }
+
+        // Form handling
+        document.getElementById('inquiryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Inquiry submitted successfully! We will contact you soon.');
+            this.reset();
+        });
+
+        // Property type dependent fields
+        document.querySelector('select').addEventListener('change', function(e) {
+            const flatTypeSelect = document.querySelector('.flat-type');
+            if(e.target.value === 'Apartment') {
+                flatTypeSelect.classList.remove('hidden');
+            } else {
+                flatTypeSelect.classList.add('hidden');
+            }
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
